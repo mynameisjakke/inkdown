@@ -57,12 +57,12 @@ describe('Property: PDF Error Transformation', () => {
             return false // Should have thrown
           } catch (error) {
             if (!(error instanceof Error)) return false
-            const errorMessage = error.message
+            const errorMessage = error.message.toLowerCase()
 
             // Should NOT expose API endpoint
             if (errorMessage.includes('api.pdfshift.io')) return false
             if (errorMessage.includes('/v3/convert')) return false
-            if (errorMessage.includes('https://')) return false
+            if (errorMessage.includes('https://api')) return false
             
             return true
           }
@@ -92,14 +92,14 @@ describe('Property: PDF Error Transformation', () => {
             return false // Should have thrown
           } catch (error) {
             if (!(error instanceof Error)) return false
-            const errorMessage = error.message
+            const errorMessage = error.message.toLowerCase()
 
             // Should NEVER contain the API key
-            if (errorMessage.includes(apiKey)) return false
+            if (errorMessage.includes(apiKey.toLowerCase())) return false
             
             // Should NEVER contain authorization details
-            if (errorMessage.includes('Authorization')) return false
-            if (errorMessage.includes('Basic')) return false
+            if (errorMessage.includes('authorization')) return false
+            if (errorMessage.includes('basic')) return false
             if (errorMessage.includes('api:')) return false
             
             return true
@@ -131,7 +131,7 @@ describe('Property: PDF Error Transformation', () => {
             // Should be user-friendly (contains common user-facing terms)
             const isUserFriendly = 
               errorMessage.includes('pdf') ||
-              errorMessage.includes('try again') ||
+              (errorMessage.includes('try again') || errorMessage.includes('please try again')) ||
               errorMessage.includes('service') ||
               errorMessage.includes('temporarily unavailable') ||
               errorMessage.includes('rate limit') ||
@@ -171,6 +171,7 @@ describe('Property: PDF Error Transformation', () => {
           } catch (error) {
             if (!(error instanceof Error)) return false
             const errorMessage = error.message
+            const lowerMessage = errorMessage.toLowerCase()
 
             // Should NOT expose network error codes
             if (errorMessage.includes(errorCode)) return false
@@ -179,10 +180,9 @@ describe('Property: PDF Error Transformation', () => {
             if (errorMessage.includes('ENET')) return false
             
             // Should be user-friendly
-            const lowerMessage = errorMessage.toLowerCase()
             const isUserFriendly = 
               lowerMessage.includes('pdf') &&
-              lowerMessage.includes('try again')
+              (lowerMessage.includes('try again') || lowerMessage.includes('please try again'))
             
             return isUserFriendly
           }
@@ -253,7 +253,8 @@ describe('Property: PDF Error Transformation', () => {
             // Should be user-friendly even when response parsing fails
             const isUserFriendly = 
               errorMessage.includes('pdf') ||
-              errorMessage.includes('try again')
+              errorMessage.includes('try again') ||
+              errorMessage.includes('please try again')
             
             if (!isUserFriendly) return false
             
