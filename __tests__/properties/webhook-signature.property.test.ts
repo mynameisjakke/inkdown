@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import * as fc from 'fast-check'
+import { NextRequest } from 'next/server'
 
 // Feature: phase-0-foundation-setup, Property 4: Webhook Signature Rejection
 // **Validates: Requirements 8.5**
@@ -30,7 +31,7 @@ describe('Property 4: Webhook Signature Rejection', () => {
           const { POST } = await import('@/app/api/webhooks/polar/route')
 
           // Create a request without a signature header
-          const request = new Request('http://localhost:3000/api/webhooks/polar', {
+          const request = new NextRequest('http://localhost:3000/api/webhooks/polar', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -71,7 +72,7 @@ describe('Property 4: Webhook Signature Rejection', () => {
           const { POST } = await import('@/app/api/webhooks/polar/route')
 
           // Create a request with an invalid signature
-          const request = new Request('http://localhost:3000/api/webhooks/polar', {
+          const request = new NextRequest('http://localhost:3000/api/webhooks/polar', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -118,7 +119,7 @@ describe('Property 4: Webhook Signature Rejection', () => {
           const { POST } = await import('@/app/api/webhooks/polar/route')
 
           // Create a request with a malformed signature
-          const request = new Request('http://localhost:3000/api/webhooks/polar', {
+          const request = new NextRequest('http://localhost:3000/api/webhooks/polar', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -155,14 +156,11 @@ describe('Property 4: Webhook Signature Rejection', () => {
         }),
         fc.string({ minLength: 10, maxLength: 100 }),
         async (webhookPayload, invalidSignature) => {
-          // Mock Convex mutation to track if it was called
-          const mockMutation = vi.fn()
-          
           // We'll verify that the handler returns 401 before any processing
           // This is tested by ensuring the response is immediate and no side effects occur
           const { POST } = await import('@/app/api/webhooks/polar/route')
 
-          const request = new Request('http://localhost:3000/api/webhooks/polar', {
+          const request = new NextRequest('http://localhost:3000/api/webhooks/polar', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

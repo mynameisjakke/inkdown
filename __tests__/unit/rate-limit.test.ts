@@ -34,10 +34,13 @@ vi.mock('@upstash/ratelimit', () => {
         reset: state.resetTime,
       }
     }),
-  }))
+  })) as unknown as {
+    new (): { limit: (identifier: string) => Promise<{ success: boolean; limit: number; remaining: number; reset: number }> }
+    slidingWindow: (requests: number, window: string) => string
+  }
   
   // Add static method
-  RatelimitMock.slidingWindow = vi.fn().mockReturnValue('sliding-window-limiter')
+  RatelimitMock.slidingWindow = vi.fn().mockReturnValue('sliding-window-limiter') as unknown as (requests: number, window: string) => string
   
   return {
     Ratelimit: RatelimitMock,

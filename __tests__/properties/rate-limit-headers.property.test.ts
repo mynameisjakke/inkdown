@@ -30,7 +30,6 @@ describe('Property 5: Rate Limit Response Headers', () => {
     process.env.PDFSHIFT_API_KEY = 'test-api-key'
     process.env.POLAR_ACCESS_TOKEN = 'polar_at_test'
     process.env.POLAR_WEBHOOK_SECRET = 'whsec_test'
-    process.env.NODE_ENV = 'test'
     
     vi.clearAllMocks()
   })

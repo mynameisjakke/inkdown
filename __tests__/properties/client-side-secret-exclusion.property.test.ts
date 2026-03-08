@@ -14,7 +14,6 @@ import { join } from 'path'
 import { execSync } from 'child_process'
 
 describe('Property: Client-Side Secret Exclusion', () => {
-  let buildOutput: string[] = []
   let buildCompleted = false
 
   beforeAll(async () => {
@@ -161,7 +160,6 @@ describe('Property: Client-Side Secret Exclusion', () => {
               
               // Look for patterns like process.env.SECRET_KEY or "SECRET_KEY"
               const hasDirectReference = content.includes(`process.env.${secretEnvVar}`)
-              const hasStringReference = content.includes(`"${secretEnvVar}"`) || content.includes(`'${secretEnvVar}'`)
               
               // If we find references, they should only be in comments or dead code
               // For this test, we'll be strict and not allow any references
@@ -170,7 +168,7 @@ describe('Property: Client-Side Secret Exclusion', () => {
               if (hasDirectReference) {
                 console.error(`Found reference to ${secretEnvVar} in client bundle ${file}`)
               }
-            } catch (error) {
+            } catch {
               // File read error, skip
             }
           }
@@ -209,7 +207,7 @@ describe('Property: Client-Side Secret Exclusion', () => {
             console.error(`Found process.env.${secret} in client bundle ${file}`)
           }
         }
-      } catch (error) {
+      } catch {
         // File read error, skip
       }
     }
@@ -219,7 +217,7 @@ describe('Property: Client-Side Secret Exclusion', () => {
     fc.assert(
       fc.property(
         fc.string({ minLength: 20, maxLength: 50 }).map(s => `test-api-key-${s}`),
-        (testApiKey) => {
+        () => {
           // This property tests that if we were to use different API keys,
           // they would also not leak to the client
           
@@ -244,7 +242,7 @@ describe('Property: Client-Side Secret Exclusion', () => {
                   console.error(`Found PDFShift authentication pattern in client bundle ${file}`)
                 }
               }
-            } catch (error) {
+            } catch {
               // File read error, skip
             }
           }

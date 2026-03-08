@@ -42,7 +42,7 @@ function logInfo(message: string) {
 async function verifyEnvironmentVariables(): Promise<boolean> {
   logInfo('Verifying environment variables...')
   try {
-    const env = validateEnv()
+    validateEnv()
     logSuccess('All environment variables are valid')
     return true
   } catch (error) {

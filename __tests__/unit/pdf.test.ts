@@ -17,7 +17,6 @@ describe('PDF generation wrapper', () => {
     process.env.UPSTASH_REDIS_REST_TOKEN = 'test-token'
     process.env.POLAR_ACCESS_TOKEN = 'test-access-token'
     process.env.POLAR_WEBHOOK_SECRET = 'test-webhook-secret'
-    process.env.NODE_ENV = 'test'
     
     mockFetch.mockClear()
   })

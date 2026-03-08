@@ -52,14 +52,14 @@ describe('Property: Environment Validation Fails Fast', () => {
   it('should throw an error when any required environment variable is missing', () => {
     fc.assert(
       fc.property(
-        fc.subarray(requiredEnvVars, { minLength: 1, maxLength: requiredEnvVars.length }),
+        fc.subarray([...requiredEnvVars], { minLength: 1, maxLength: requiredEnvVars.length }),
         (missingVars) => {
           // Set up environment with some variables missing
-          process.env = { ...validEnvValues }
+          process.env = { ...validEnvValues, NODE_ENV: 'test' } as NodeJS.ProcessEnv
           
           // Remove the selected variables
           missingVars.forEach(varName => {
-            delete process.env[varName]
+            delete (process.env as Record<string, string | undefined>)[varName as string]
           })
 
           // Validation should throw
@@ -75,7 +75,7 @@ describe('Property: Environment Validation Fails Fast', () => {
             // Error should identify at least one of the missing variables
             const errorMessage = (error as Error).message
             const mentionsMissingVar = missingVars.some(varName => 
-              errorMessage.includes(varName)
+              errorMessage.includes(varName as string)
             )
             expect(mentionsMissingVar).toBe(true)
           }
@@ -94,9 +94,10 @@ describe('Property: Environment Validation Fails Fast', () => {
           // Set up environment with invalid Clerk keys
           process.env = {
             ...validEnvValues,
+            NODE_ENV: 'test',
             NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: invalidPublicKey,
             CLERK_SECRET_KEY: invalidSecretKey,
-          }
+          } as NodeJS.ProcessEnv
 
           // Validation should throw
           expect(() => validateEnv()).toThrow()
@@ -138,8 +139,9 @@ describe('Property: Environment Validation Fails Fast', () => {
           // Test with invalid CONVEX_URL
           process.env = {
             ...validEnvValues,
+            NODE_ENV: 'test',
             NEXT_PUBLIC_CONVEX_URL: invalidUrl,
-          }
+          } as NodeJS.ProcessEnv
 
           expect(() => validateEnv()).toThrow()
           
@@ -163,8 +165,8 @@ describe('Property: Environment Validation Fails Fast', () => {
         fc.constantFrom(...requiredEnvVars),
         (varName) => {
           // Set up environment with one variable as empty string or undefined
-          process.env = { ...validEnvValues }
-          delete process.env[varName]
+          process.env = { ...validEnvValues, NODE_ENV: 'test' } as NodeJS.ProcessEnv
+          delete (process.env as Record<string, string | undefined>)[varName]
 
           expect(() => validateEnv()).toThrow()
           
@@ -184,7 +186,7 @@ describe('Property: Environment Validation Fails Fast', () => {
 
   it('should succeed when all environment variables are valid', () => {
     // Set up complete valid environment
-    process.env = { ...validEnvValues }
+    process.env = { ...validEnvValues, NODE_ENV: 'test' } as NodeJS.ProcessEnv
 
     // Should not throw
     expect(() => validateEnv()).not.toThrow()

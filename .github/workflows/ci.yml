@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Lint
+        run: npm run lint
+      
+      - name: Type check
+        run: npm run type-check
+      
+      - name: Run tests
+        run: npm run test
+      
+      - name: Build
+        run: npm run build
+        env:
+          # Mock environment variables for build
+          CONVEX_DEPLOYMENT: ci-test
+          NEXT_PUBLIC_CONVEX_URL: https://ci-test.convex.cloud
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ci
+          CLERK_SECRET_KEY: sk_test_ci
+          UPSTASH_REDIS_REST_URL: https://ci-test.upstash.io
+          UPSTASH_REDIS_REST_TOKEN: ci-test-token
+          PDFSHIFT_API_KEY: ci-test-key
+          POLAR_ACCESS_TOKEN: polar_at_ci
+          POLAR_WEBHOOK_SECRET: whsec_ci
