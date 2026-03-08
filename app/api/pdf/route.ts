@@ -5,7 +5,8 @@ import { generatePDF } from '@/lib/pdf'
 export async function POST(req: NextRequest) {
   try {
     // Extract IP address for rate limiting
-    const ip = req.ip ?? req.headers.get('x-forwarded-for') ?? 'unknown'
+    const forwardedFor = req.headers.get('x-forwarded-for')
+    const ip = forwardedFor?.split(',')[0] ?? 'unknown'
     
     // Check rate limit
     const { success, limit, remaining, reset } = await checkRateLimit(ip)
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
     })
     
     // Return PDF with appropriate headers
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(pdfBuffer as unknown as BodyInit, {
       status: 200,
       headers: {
         ...headers,
