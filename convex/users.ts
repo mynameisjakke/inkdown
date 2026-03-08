@@ -9,7 +9,10 @@ export const updateSubscription = mutation({
       v.literal('active'),
       v.literal('canceled'),
       v.literal('past_due'),
-      v.literal('trialing')
+      v.literal('trialing'),
+      v.literal('incomplete'),
+      v.literal('incomplete_expired'),
+      v.literal('unpaid')
     ),
   },
   handler: async (ctx, args) => {

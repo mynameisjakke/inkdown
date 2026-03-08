@@ -24,15 +24,16 @@ export async function POST(req: NextRequest) {
       case 'subscription.created':
       case 'subscription.updated':
         await convex.mutation(api.users.updateSubscription, {
-          userId: event.data.customer_id,
+          userId: event.data.customerId,
           subscriptionId: event.data.id,
-          status: event.data.status,
+          status: event.data.status as 'active' | 'canceled' | 'past_due' | 'trialing' | 'incomplete' | 'incomplete_expired' | 'unpaid',
         })
         break
         
-      case 'checkout.completed':
+      case 'order.created':
+        // Handle order completion (similar to checkout.completed)
         await convex.mutation(api.users.handleCheckout, {
-          userId: event.data.customer_id,
+          userId: event.data.customerId,
           checkoutId: event.data.id,
         })
         break
