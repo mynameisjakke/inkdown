@@ -12,13 +12,21 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^7.0.1",
+    "@codemirror/lang-markdown": "^6.5.0",
     "@polar-sh/sdk": "^0.46.3",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@uiw/react-codemirror": "^4.25.8",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.36.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "convex": "^1.32.0",
+    "framer-motion": "^12.35.1",
+    "lucide-react": "^0.577.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "tailwind-merge": "^3.5.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -37,6 +45,7 @@
     "fast-check": "^4.6.0",
     "jsdom": "^27.0.1",
     "tailwindcss": "^4",
+    "tailwindcss-animate": "^1.0.7",
     "tsx": "^4.21.0",
     "typescript": "^5",
     "vitest": "^3.2.4"
